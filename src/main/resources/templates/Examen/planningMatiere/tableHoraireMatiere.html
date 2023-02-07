@@ -1,0 +1,42 @@
+<input name="dateDebutSemaine" type="hidden" id="dateDebutSemaine" th:value="${dateDebutSemaine}"/>
+<input name="dateFinSemaine" type="hidden" id="dateFinSemaine" th:value="${dateFinSemaine}"/>
+<input name="daysLock" type="hidden" id="daysLock" th:value="${daysLock}"/>
+<input name="checkLocks" type="hidden" id="checkLocks" value=""/>
+<!--  <input name="ListExclure" type="hidden" id="ListExclure" value=""/>
+<input name="listeIdAtStart" type="hidden" id="listeIdAtStart" value=""/>-->
+<input name="listIdForOneMatiere" type="hidden" id="listIdForOneMatiere" value=""/>
+<input name="listIdRememberMatiere" type="hidden" id="listIdRememberMatiere" value=""/>
+<table id="tabHorraireMatiere">
+	<tr>
+		<th></th>
+		<th>Lundi</th>
+		<th>Mardi</th>
+		<th>Mercredi</th>
+		<th>Jeudi</th>
+		<th>Vendredi</th>
+		<th>Samedi</th>
+		<th>Dimanche</th>
+	</tr>
+	<tr th:each="horaire : ${horaires}">
+		<td th:text="|${horaire.horaireDebut} - ${horaire.horaireFin}|"></td>
+		<td><input th:id="|Lundi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Lundi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Lundi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Mardi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Mardi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Mardi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Mercredi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Mercredi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Mercredi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Jeudi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Jeudi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Jeudi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Vendredi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Vendredi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Vendredi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Samedi-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Samedi-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Samedi-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+		<td><input th:id="|Dimanche-${horaire.horaireDebut}-${horaire.horaireFin}|" th:value="|Dimanche-${horaire.horaireDebut}-${horaire.horaireFin}|" type="checkbox" th:attr="onclick=|identifyCheckboxForMatiere('Dimanche-${horaire.horaireDebut}-${horaire.horaireFin}')|"></td>
+	</tr>
+</table>
+<script th:inline="javascript">
+$(document).ready(function(){
+	lockCheckbox();
+	$("#dateDebutSemaineAffichage").text([[${dateDebutSemaineAffichage}]]);
+	$("#dateFinSemaineAffichage").text([[${dateFinSemaineAffichage}]]);
+	if([[${alert}]] == false){
+		alert("Cette semaine ne fais pas partie de l'examen");
+	}
+	lockCheckboxOfPlanning();
+	lockCheckboxDateExclu();
+})
+</script>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+<title>Emploi du temps</title>
+</head>
+<body>
+	<form action="/Login/addUser" method="post" id="form">
+		<label>Nom</label>
+		<input id="name" name="name" type="text">
+		<label>Pseudo</label>
+		<input id="username" name="username" type="text">
+		<label>Mot de passe</label>
+		<input id="password" name="password" type="password">
+		<label>Type</label>
+		<select name="type">
+		<option value="STU">Eleve</option>
+		<option value="PRO">Professeur</option>
+		<option value="RES">Responsable</option>
+		</select>
+	<input value="s'enregistrer" type="submit">
+	</form>
+</body>
+
+<script>
+$("#form").on('submit',function(e){
+	e.preventDefault();
+	var makeRequest = true;
+	if($("#name").val() == ""){
+		alert("le nom doit etre remplis");
+		makeRequest = false;
+	}
+	else if($("#username").val() == ""){
+		alert("le pseudo doit etre remplis");
+		makeRequest = false;
+	}
+	else if($("#password").val() == ""){
+		alert("le mot de passe doit etre remplis");
+		makeRequest = false;
+	}
+	if(makeRequest){
+	   	$.ajax({
+		    url: $(this).attr('action'),
+		    type: $(this).attr('method'),
+		    data: $(this).serialize(),
+		    success: function(reponse) { 
+	    		if(reponse == ""){
+	    			window.location = "/";
+	    		}
+	    	}
+	   });
+	}
+})
+</script>
+</html>

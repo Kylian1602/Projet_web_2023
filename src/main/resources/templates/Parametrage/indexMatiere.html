@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <title>Planning</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+      .form-control {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Ajouter</h2>
+
+          <form action="/Parametrage/addMatiere" method="post" id="formMatiere">
+            <input placeholder="Nom" class="form-control" name="nom" type="text" id="name" />
+            <select class="form-control" name="idSpecialite" id="idSpecialite">
+              <option value="">Selectionner une specialite</option>
+              <option
+                th:each="specialite : ${specialites}"
+                th:value="${specialite.idSpecialite}"
+                th:text="${specialite.nom}"
+              ></option>
+            </select>
+
+            <input
+              class="form-control"
+              name="tempsExamen"
+              type="time"
+              id="tempsExamen"
+            />
+            <button type="submit" class="btn btn-primary w-100">
+              Ajouter Matière
+            </button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h2>Modifier</h2>
+
+          <form
+            action="/Parametrage/modifierMatiere"
+            method="post"
+            id="formModifierMatiere"
+          >
+            <select
+              class="form-control"
+              name="idMatiereModif"
+              id="idMatiereModif"
+            >
+              <option value="0">Selectionner une matiere</option>
+              <option
+                th:each="matiere : ${matieres}"
+                th:value="${matiere.idMatiere}"
+                th:text="${matiere.nom}"
+              ></option>
+            </select>
+
+            <select class="form-control" name="idSpecialite">
+              <option value="">Selectionner une specialite</option>
+              <option
+                th:each="specialite : ${specialites}"
+                th:value="${specialite.idSpecialite}"
+                th:text="${specialite.nom}"
+              ></option>
+            </select>
+
+            <input placeholder="Nom" class="form-control" name="nom" type="text" />
+            <input class="form-control" name="tempsExamen" type="time" />
+            <input type="submit" class="btn btn-danger w-100 mb-2" value="supprimer Matiere">
+            <input type="submit" class="btn btn-primary w-100" value="modifier Matiere">
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  <!--  <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script> -->
+  </body>
+
+  <script>
+    $("#formMatiere").on("submit", function (e) {
+      e.preventDefault();
+      if (
+        $("#name").val() == "" ||
+        $("#idSpecialite").val() == "" ||
+        $("#tempsExamen").val() == ""
+      ) {
+        alert("Il faut remplir tout les champs");
+      } else {
+        $.ajax({
+          url: $(this).attr("action"),
+          type: $(this).attr("method"),
+          data: $(this).serialize(),
+          success: function (reponse) {
+            if (reponse == "") {
+              alert("la matiere a été ajouter");
+              document.location.reload();
+            } else {
+              alert(reponse);
+            }
+          },
+        });
+      }
+    });
+
+    $("#formModifierMatiere").on("submit", function (e) {
+      e.preventDefault();
+      var urls = $(this).attr("action");
+      console.log($("[type=submit]:focus").val() );
+      if ($("[type=submit]:focus").val() == "supprimer Matiere") {
+        urls = "/Parametrage/deleteMatiere";
+      }
+      if ($("#idMatiereModif").val() == "0") {
+        alert("choisir une matiere pour modifier");
+      } else {
+        $.ajax({
+          url: urls,
+          type: $(this).attr("method"),
+          data: $(this).serialize(),
+          success: function (reponse) {
+            alert(reponse);
+            document.location.reload();
+          },
+        });
+      }
+    });
+  </script>
+</html>

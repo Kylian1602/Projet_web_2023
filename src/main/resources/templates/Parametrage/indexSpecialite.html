@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <title>Insert title here</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+	<style>
+		.form-control {
+			margin-top: 1rem;
+			margin-bottom: 1rem;
+		}
+	</style>
+  </head>
+  <body>
+    <div class="container p-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <h2>Ajouter</h2>
+
+          <form
+            action="/Parametrage/addSpecialite"
+            method="post"
+            id="formSpecialite"
+          >
+            <input placeholder="Nom" class="form-control" name="name" type="text" id="name" />
+            <input
+				placeholder="Nombre d'étudiants"
+              class="form-control"
+              name="nbEtudiant"
+              type="number"
+              id="nbEtudiant"
+            />
+            <!-- <input
+              class="form-control"
+              value="Ajouter specialité"
+              type="submit"
+            /> -->
+			<button type="submit" class="btn btn-primary w-100">Ajouter Spécialité</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h2>Modifier</h2>
+
+          <form
+            action="/Parametrage/modifierSpecialite"
+            method="post"
+            id="formModifierSpecialite"
+          >
+            <select
+              class="form-control"
+              name="idSpecialiteModif"
+              id="idSpecialiteModif"
+            >
+              <option value="0">Selectionner une spécialité</option>
+              <option
+                th:each="specialite : ${specialites}"
+                th:value="${specialite.idSpecialite}"
+                th:text="${specialite.nom}"
+              ></option>
+            </select>
+
+            <input class="form-control" placeholder="Nouveau Nom" name="name" type="text" />
+            <input class="form-control" placeholder="Nombre d'étudiants" name="nbEtudiant" type="number" />
+            <!-- <input
+              class="form-control"
+              value="modifier specialité"
+              type="submit"
+            />
+            <input
+              class="form-control btn btn-danger"
+              value="supprimer specialite"
+              type="submit"
+            /> -->
+			<input type="submit" class="btn btn-danger w-100 mb-2" value="supprimer specialite">
+			<input type="submit" class="btn btn-primary w-100" value="modifier specialité" >
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $("#formSpecialite").on("submit", function (e) {
+        e.preventDefault();
+        if ($("#name").val() == "" || $("#nbEtudiant").val() == "") {
+          alert("il faut remplit tout les champs");
+        } else {
+          $.ajax({
+            url: $(this).attr("action"),
+            type: $(this).attr("method"),
+            data: $(this).serialize(),
+            success: function (reponse) {
+              if (reponse == "") {
+                alert("la specialité a été ajouter");
+                document.location.reload();
+              } else {
+                alert(reponse);
+              }
+            },
+          });
+        }
+      });
+
+      $("#formModifierSpecialite").on("submit", function (e) {
+        e.preventDefault();
+        var urls = $(this).attr("action");
+        if ($("[type=submit]:focus").val() == "supprimer specialite") {
+          urls = "/Parametrage/deleteSpecialite";
+        }
+        if ($("#idSpecialiteModif").val() == "0") {
+          alert("choisir une specialite pour modifier");
+        } else {
+          $.ajax({
+            url: urls,
+            type: $(this).attr("method"),
+            data: $(this).serialize(),
+            success: function (reponse) {
+              alert(reponse);
+              document.location.reload();
+            },
+          });
+        }
+      });
+    </script>
+        <!-- <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script> -->
+   <!-- <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>-->
+  </body>
+</html>

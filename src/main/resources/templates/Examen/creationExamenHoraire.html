@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <title>Planning</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lato", sans-serif;
+        color: #202020;
+      }
+
+      p {
+        display: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        overflow: hidden;
+      }
+
+      table td,
+      table th {
+        border-top: 1px solid #ecf0f1;
+        padding: 10px;
+      }
+
+      table td {
+        border-left: 1px solid #ecf0f1;
+        border-right: 1px solid #ecf0f1;
+      }
+
+      table th {
+        background-color: #4ecdc4;
+      }
+
+      table tr:nth-of-type(even) td {
+        background-color: #d9f4f2;
+      }
+
+      table .total th {
+        background-color: white;
+      }
+
+      table .total td {
+        text-align: right;
+        font-weight: 700;
+      }
+
+      .mobile-header {
+        display: none;
+      }
+
+      @media only screen and (max-width: 760px) {
+        p {
+          display: block;
+          font-weight: bold;
+        }
+
+        table tr td:not(:first-child),
+        table tr th:not(:first-child),
+        table tr td:not(.total-val) {
+          display: none;
+        }
+
+        table tr:nth-of-type(even) td:first-child {
+          background-color: #d9f4f2;
+        }
+
+        table tr:nth-of-type(odd) td:first-child {
+          background-color: white;
+        }
+
+        table tr:nth-of-type(even) td:not(:first-child) {
+          background-color: white;
+        }
+
+        table tr th:first-child {
+          width: 100%;
+          display: block;
+        }
+
+        table tr th:not(:first-child) {
+          width: 40%;
+          transition: transform 0.4s ease-out;
+          transform: translateY(-9999px);
+          position: relative;
+          z-index: -1;
+        }
+
+        table tr td:not(:first-child) {
+          transition: transform 0.4s ease-out;
+          transform: translateY(-9999px);
+          width: 60%;
+          position: relative;
+          z-index: -1;
+        }
+
+        table tr td:first-child {
+          display: block;
+          cursor: pointer;
+        }
+
+        table tr.total th {
+          width: 25%;
+          display: inline-block;
+        }
+
+        table tr td.total-val {
+          display: inline-block;
+          transform: translateY(0);
+          width: 75%;
+        }
+      }
+
+      @media only screen and (max-width: 300px) {
+        table tr th:not(:first-child) {
+          width: 50%;
+          font-size: 14px;
+        }
+
+        table tr td:not(:first-child) {
+          width: 50%;
+          font-size: 14px;
+        }
+      }
+
+      body {
+        background-image: repeating-linear-gradient(
+            135deg,
+            rgba(240, 240, 240, 0.02) 0px,
+            rgba(240, 240, 240, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 168px
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(232, 232, 232, 0.02) 0px,
+            rgba(232, 232, 232, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 168px
+          ),
+          linear-gradient(90deg, #ffffff, #ffffff);
+      }
+      #headPlanning {
+        display: flex;
+      }
+      p {
+        margin-bottom: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container p-5">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div id="choseSpecialite">
+            <form
+              action="/Examen/choseSpecialite"
+              method="post"
+              id="formSpecialite"
+            >
+              <select class="form-control my-3" name="idSpecialite" id="idSpecialite">
+                <option
+                  th:each="specialite : ${specialites}"
+                  th:value="${specialite.idSpecialite}"
+                  th:text="${specialite.nom}"
+                ></option>
+              </select>
+            </form>
+          </div>
+          <div id="planning">
+            <div id="headPlanning" class="my-4">
+              <button id="Down" style="background: #4ecdc4;border: none; color: black; font-size: 1rem;">&#8249;</button>
+              <h2>
+				<span class="mx-2"></span>Semaine du <span id="dateDebutSemaineAffichage"></span>
+				au <span id="dateFinSemaineAffichage"></span><span class="mx-2"></span>
+              </h2>
+              <button id="Up" style="background: #4ecdc4;border: none; color: black; font-size: 1rem;">&#8250;</button>
+            </div>
+
+            <div id="bodyPlanning">
+              <form
+                action="/Examen/addHoraireExclure"
+                method="post"
+                id="formAddHoraire"
+              >
+                <div id="tabForm"></div>
+              </form>
+            </div>
+          </div>
+          <div>
+            <form
+              action="/Examen/creationExamenHoraireMatiere"
+              method="post"
+              id="formValidHoraire"
+            >
+			  <button type="submit" class="btn w-100 btn-primary mt-2">Valider les plannings</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script th:inline="javascript">
+    $(document).ready(function () {
+      $("#tabForm").load("tableHoraire", {
+        dateDebutSemaine: "",
+        dateFinSemaine: "",
+        buttonClick: "",
+      });
+    });
+
+    $("#idSpecialite").on("change", function () {
+      if ($("#idSpecialite").val() != 0) {
+        lockCheckboxOfSpecialite();
+      }
+    });
+
+    //verouille les checkbox n'appartenant pas a l'examen
+    function lockCheckbox() {
+      var dayLocks = $("#daysLock").val();
+      var idDay = "";
+      var tabIdDay;
+      $("#tabHorraire > tbody > tr").each(function () {
+        $(this.cells).each(function () {
+          var newcell = $(this)[0].innerHTML;
+          if (newcell.indexOf("<input") == -1) {
+          } else {
+            idDay = $(newcell).val();
+            tabIdDay = idDay.split("-");
+            if (dayLocks.indexOf(tabIdDay[0]) != -1) {
+              $("#" + idDay).prop("disabled", true);
+            }
+          }
+        });
+      });
+    }
+
+    //recupere les checkbox cocher pour les envoyer au back
+    function getCheckbox() {
+      var Liste_id_Exclure = "";
+      var idValue = "";
+      var id = "";
+      $("#tabHorraire > tbody > tr").each(function () {
+        $(this.cells).each(function () {
+          var newcell = $(this)[0].innerHTML;
+          if (newcell.indexOf("<input") == -1) {
+          } else {
+            id = $(newcell).val();
+            if ($("#" + id).prop("checked") == true) {
+              Liste_id_Exclure = Liste_id_Exclure + id + "¤";
+            }
+          }
+        });
+      });
+      $("#ListExclure").val(Liste_id_Exclure);
+    }
+
+    //coche les checkbox deja remplit pour une spécialité
+    function lockCheckboxOfSpecialite() {
+      $.ajax({
+        url: "getHoraireExcluOfSpecialite",
+        type: "post",
+        data: {
+          idSpecialite: $("#idSpecialite").val(),
+          dateDebutSemaine: $("#dateDebutSemaine").val(),
+          dateFinSemaine: $("#dateFinSemaine").val(),
+        },
+        success: function (reponse) {
+          var listeIdAtStart = "";
+          if (reponse != "examen null") {
+            var horaireExclu = reponse;
+            var idCheckbox = "";
+            $("#tabHorraire > tbody > tr").each(function () {
+              $(this.cells).each(function () {
+                var newcell = $(this)[0].innerHTML;
+                if (newcell.indexOf("<input") == -1) {
+                } else {
+                  idCheckbox = $(newcell).val();
+                  //decoche les checkbox lors d'un changement de specialité
+                  $("#" + idCheckbox).prop("checked", false);
+                  if (horaireExclu.indexOf(idCheckbox) != -1) {
+                    $("#" + idCheckbox).prop("checked", true);
+                    listeIdAtStart += $("#" + idCheckbox).val() + "¤";
+                    //$("#"+idCheckbox).prop("disabled", true);
+                  }
+                }
+              });
+            });
+          } else {
+            alert(reponse);
+          }
+          $("#listeIdAtStart").val(listeIdAtStart);
+        },
+      });
+    }
+
+    $("#Up").on("click", function () {
+      /*$("#tabForm").load("tableHoraire",{dateDebutSemaine : $("#dateDebutSemaine").val(),dateFinSemaine: $("#dateFinSemaine").val(),buttonClick : "Up"}, 
+			function(response, status, xhr){
+		if(status == "error"){
+			alert(xhr.statusText);
+		}
+	});*/
+      $("#tabForm").load("tableHoraire", {
+        dateDebutSemaine: $("#dateDebutSemaine").val(),
+        dateFinSemaine: $("#dateFinSemaine").val(),
+        buttonClick: "Up",
+      });
+    });
+
+    $("#Down").on("click", function () {
+      $("#tabForm").load("tableHoraire", {
+        dateDebutSemaine: $("#dateDebutSemaine").val(),
+        dateFinSemaine: $("#dateFinSemaine").val(),
+        buttonClick: "Down",
+      });
+    });
+
+    $("#formAddHoraire").on("submit", function (e) {
+      e.preventDefault();
+      getCheckbox();
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize() + "&idSpecialite=" + $("#idSpecialite").val(),
+        success: function (reponse) {
+          if (reponse == "") {
+            alert("Les horaires ont été exclu");
+            $("#tabForm").load("tableHoraire", {
+              dateDebutSemaine: "",
+              dateFinSemaine: "",
+              buttonClick: "",
+            });
+          } else {
+            alert(reponse);
+          }
+        },
+      });
+    });
+  </script>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+<title>Planning</title>
+</head>
+<body>
+<div id="choixMutualise">
+	<h2>Mutualisé une matiere ?</h2>
+	<button id="oui">Oui</button>
+	<button id="non">Non</button>
+</div>
+
+<div id="choixMatiere">
+	<h2>Choisir la matiere a mutualisé</h2>
+	<form action="/Examen/choseMatiereMutualise" method="post" id="formExamen">
+		<select name="nomMatiere" id="nomMatiere">
+			<option value="">Selectionner une matiere</option>
+			<option th:each="nom : ${noms}" th:value="${nom}" th:text="${nom}">
+		</select>
+		<input value="selectionner" type="submit">
+	</form>
+</div>
+
+<div id="divTab">
+	<h2>Choisir les specialité concerner</h2>
+	<form action="/Examen/addMatiereMutualise" method="post" id="formExamenMutualise">
+	<input name="idSpecialite" type="hidden" id="idSpecialite"/>
+	<input name="nom" type="hidden" id="nom"/>
+		<div id="divTableauMutualise">
+		</div>
+	<input value="selectionner" type="submit">
+	</form>
+	
+</div>
+</body>
+
+<script>
+$(document).ready(function(){
+	$("#choixMatiere").hide();
+	$("#divTab").hide();
+	verifMutualiseTrue();
+})
+
+function verifMutualiseTrue(){
+	$.ajax({
+		url: "/Examen/changeForSalle",
+		type: "post",
+		data:{
+			
+		},
+		success: function(reponse){
+			if(reponse == "false"){
+				window.location = "/Examen/creationExamenSalle";
+			}
+			else if(reponse != ""){
+				alert("reponse");
+			}
+		}
+	})
+}
+
+function getCheckbox(){
+	var Liste_id = "";
+	var Liste_id_Exclure = "";
+	var idValue = ""
+	var id ="";
+	$("#tabSpecialite > tbody > tr").each(function(){
+		$(this.cells).each(function(){
+			var newcell = $(this)[0].innerHTML;
+			if(newcell.indexOf("<input") == -1){
+				
+			}
+			else{
+				id = $(newcell).val();
+				Liste_id = Liste_id + id + ";";
+				if($("#"+id).prop("checked") == true){
+					Liste_id_Exclure = Liste_id_Exclure + id + ";";
+				}
+			}
+		})
+	})
+	$("#idSpecialite").val(Liste_id_Exclure);
+}
+
+$("#oui").on("click",function(){
+	$("#choixMatiere").show();
+})
+
+$("#non").on("click",function(){
+	window.location = "changeSessionForMutualise";
+})
+
+$("#formExamen").on('submit',function(e){
+	e.preventDefault();
+	if($("#nomMatiere").val() == ""){
+		alert("il faut choisir une matiere");
+	}
+	else{
+	   	$.ajax({
+		    url: $(this).attr('action'),
+		    type: $(this).attr('method'),
+		    data: $(this).serialize(),
+		    success: function() {
+		    	$("#divTab").show();
+		    	$("#divTableauMutualise").load("tableauMutualise");
+	    	}
+	   });
+	}
+})
+
+$("#formExamenMutualise").on('submit',function(e){
+	e.preventDefault();
+	getCheckbox();
+	$("#nom").val($("#nomMatiere").val())
+	var tabIdSpecialite = $("#idSpecialite").val().split(";")
+	if($("#idSpecialite").val() == ""){
+		alert("choisir les spécialite pour mutualisé");
+	}
+	else if(tabIdSpecialite.length < 3){
+		alert("il faut choisir 2 spécialite");
+	}
+	else{
+	   	$.ajax({
+		    url: $(this).attr('action'),
+		    type: $(this).attr('method'),
+		    data: $(this).serialize(),
+		    success: function(reponse) {
+		    	if(reponse != ""){
+		    		alert(reponse)
+		    	}
+		    	else{
+		    		confirm("La matiere a été mutualise");
+		    		location.reload();
+		    	}
+	    	}
+	   });
+	}
+})
+</script>
+</html>

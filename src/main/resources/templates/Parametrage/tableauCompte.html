@@ -1,0 +1,13 @@
+<table>
+	<tr>
+		<th>Nom</th>
+		<th>Pseudo</th>
+		<th>Type</th>	
+	</tr>
+		<tr th:each="personne: ${personnes}">
+		<td th:text="${personne.name}"></td>
+		<td th:text="${personne.username}"></td>
+		<td th:text="${personne.type}"></td>
+		<td><button th:id="${personne.idPersonne}" th:attr="onclick=|modifier('${personne.idPersonne}')|">modifier</button></td>
+	</tr>
+</table>

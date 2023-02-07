@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <title>Planning</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://www.solodev.com/core/fileparse.php/131/urlt/action-grid-slider.css"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Mukta:700");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Mukta", sans-serif;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+        background: #f3f8fa;
+      }
+
+      button {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        outline: none;
+        border: 0;
+        vertical-align: middle;
+        text-decoration: none;
+        background: transparent;
+        padding: 0;
+        font-size: inherit;
+        font-family: inherit;
+      }
+
+      button.learn-more {
+        scale: 1.5;
+        width: 13rem;
+        height: auto;
+      }
+
+      button.learn-more .circle {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: relative;
+        display: block;
+        margin: 0;
+        width: 3rem;
+        height: 3rem;
+        background: #282936;
+        border-radius: 1.625rem;
+      }
+
+      button.learn-more .circle .icon {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        background: #fff;
+      }
+
+      button.learn-more .circle .icon.arrow {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        left: 0.625rem;
+        width: 1.125rem;
+        height: 0.125rem;
+        background: none;
+      }
+
+      button.learn-more .circle .icon.arrow::before {
+        position: absolute;
+        content: "";
+        top: -0.25rem;
+        right: 0.0625rem;
+        width: 0.625rem;
+        height: 0.625rem;
+        border-top: 0.125rem solid #fff;
+        border-right: 0.125rem solid #fff;
+        transform: rotate(45deg);
+      }
+
+      button.learn-more .button-text {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0.75rem 0;
+        margin: 0 0 0 1.85rem;
+        color: #282936;
+        font-weight: 700;
+        line-height: 1.6;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      button:hover .circle {
+        width: 100%;
+      }
+
+      button:hover .circle .icon.arrow {
+        background: #fff;
+        transform: translate(1rem, 0);
+      }
+
+      button:hover .button-text {
+        color: #fff;
+      }
+
+      body {
+        background-image: repeating-linear-gradient(
+            135deg,
+            rgba(240, 240, 240, 0.02) 0px,
+            rgba(240, 240, 240, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 168px
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(232, 232, 232, 0.02) 0px,
+            rgba(232, 232, 232, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 168px
+          ),
+          linear-gradient(90deg, #ffffff, #ffffff);
+      }
+
+      @supports (display: grid) {
+        /*body {
+			  display: grid;
+			  grid-template-columns: repeat(4, 1fr);
+			  grid-gap: 0.625rem;
+			  grid-template-areas: ". main main ." ". main main .";
+			}*/
+
+        #container {
+          grid-area: main;
+          align-self: center;
+          justify-self: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="admin">
+      <button id="matiere">Matiere</button>
+      <button id="specialite">Specialité</button>
+      <button id="salle">Salle</button>
+      <button id="compte">Compte</button>
+    </div> -->
+    <div class="container-fluid" id="ctn">
+      <h2>Paramétrage</h2>
+      <div class="row justify-content-center" style="display: flex">
+        <div id="matiere" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-flask"></i><span>Matiere</span>
+            </div>
+          </div>
+        </div>
+        <div id="specialite" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-dot-circle-o"></i><span>Specialité</span>
+            </div>
+          </div>
+        </div>
+        <div id="salle" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-windows"></i><span>Salle de classe</span>
+            </div>
+          </div>
+        </div>
+        <div id="compte" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-user-circle-o"></i><span>Compte</span>
+            </div>
+          </div>
+        </div>
+        <!--  <div id="professeur" class="col-xs-6 col-sm-4">
+          <div id="horraireDispo" style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-clock-o"></i><span>Horaire</span>
+            </div>
+          </div>
+        </div>-->
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $("#matiere").on("click", function () {
+      window.location = "/Parametrage/indexMatiere";
+    });
+    $("#specialite").on("click", function () {
+      window.location = "/Parametrage/indexSpecialite";
+    });
+    $("#salle").on("click", function () {
+      window.location = "/Parametrage/indexSalle";
+    });
+    $("#compte").on("click", function () {
+      window.location = "/Parametrage/indexCompte";
+    });
+
+    $("#horraireDispo").on("click", function () {
+      window.location = "/Parametrage/indexHorraireProfesseur";
+    });
+  </script>
+</html>

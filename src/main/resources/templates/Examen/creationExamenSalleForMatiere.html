@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+<title>Planning</title>
+<style type="text/css">
+        #headPlanning{
+        	display : flex;
+        }
+        p{
+        	margin-bottom: 0px;
+        }
+</style>
+</head>
+<body>
+
+<div id="choseSpecialite">
+	<select name="idSpecialite" id="idSpecialite">
+		<option th:each="specialite : ${specialites}" th:value="${specialite.idSpecialite}" th:text="${specialite.nom}">
+	</select>
+</div>
+
+<div id="planning">
+	<input name="idExamen" type="hidden" id="idExamen" value=""/>
+	<input name="idOfSelects" type="hidden" id="idOfSelects" value=""/>
+	<table id="tableSalle"></table>
+	<button id="btnVal">valider les salles pour la spécialite</button>
+	<button id="btnValPlanning">valider le planning </button>
+</div>
+</body>
+<script th:inline="javascript">
+$(document).ready(function(){
+	$("#idExamen").val([[${idExamen}]]);
+	getPlanning();
+})
+
+function getSelect(){
+	var idSelect = "";
+	var tabId = "";
+	$("#tableSalle > tr").each(function(){
+		$(this.cells).each(function(){
+			var newcell = $(this)[0].innerHTML;
+			if(newcell.indexOf("<select") == -1){
+				
+			}
+			else{
+				idSelect = $(newcell).attr("id");
+				tabId += idSelect+ "-" + $("#"+idSelect).val() + "¤";
+			}
+		})
+	})
+	$("#idOfSelects").val(tabId);
+}
+
+$("#idSpecialite").on("change",function(){
+	getPlanning();
+})
+
+$("#btnVal").on("click",function(){
+	getSelect();
+	$.ajax({
+		url: "/Examen/verifSalle",
+		type: "post",
+		data:{
+			idSpecialite: $("#idSpecialite").val(),
+			tabId : $("#idOfSelects").val()
+		},
+		success: function(reponse){
+			if(reponse != ""){
+				alert(reponse);
+			}
+			else{
+				alert("Salle enregistrer");
+			}
+		}
+	})
+})
+
+$("#btnValPlanning").on("click",function(){
+	$.ajax({
+		url: "/Examen/verifPlanningSalle",
+		type: "post",
+		data:{
+		},
+		success: function(reponse){
+			if(reponse != ""){
+				alert(reponse);
+			}
+			else{
+				alert("Planning enregistrer");
+				window.location="/";
+			}
+		}
+	})
+})
+
+function selectOnDropdown(){
+	var idSelect = "";
+	var tabId = "";
+	$("#tableSalle > tr").each(function(){
+		$(this.cells).each(function(){
+			var newcell = $(this)[0].innerHTML;
+			if(newcell.indexOf("<select") == -1){
+				
+			}
+			else{
+				idSelect = $(newcell).attr("id");
+				$("#"+idSelect).val($("#"+idSelect).attr("value"));
+			}
+		})
+	})
+}
+
+function getPlanning(){
+	//$("#planning").load("tableauSurveillant",{idSpecialite : $("#idSpecialite").val()});
+	$.ajax({
+		url: "/Examen/tableauSalle",
+		type: "post",
+		data:{
+			idSpecialite: $("#idSpecialite").val()
+		},
+		success: function(reponse){
+			if(reponse == ""){
+				alert("recharger la session");
+			}
+			else{
+				$("#tableSalle").html(reponse);
+				selectOnDropdown();
+			}
+		}
+	})
+}
+</script>

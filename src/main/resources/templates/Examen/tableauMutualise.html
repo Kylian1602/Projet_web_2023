@@ -1,0 +1,11 @@
+<table id="tabSpecialite">
+	<tr>
+		<th>idSpecialite</th>
+		<th>nom specialite</th>
+	</tr>
+	<tr th:each="specialite: ${specialites}">
+		<td th:text="${specialite.idSpecialite}"></td>
+		<td th:text="${specialite.nom}"></td>
+		<td><input th:id="${specialite.idSpecialite}" th:value="${specialite.idSpecialite}" type="checkbox"></td>
+	</tr>
+</table>

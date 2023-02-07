@@ -1,0 +1,24 @@
+<table id="tableSurveillant">
+	<tr>
+		<th>nom</th>
+		<th>date d'examen</th>
+		<th>heure de debut</th>
+		<th>heure de fin</th>
+		<th>Surveillant</th>
+	</tr>
+	<tr th:each="matiere : ${matieres}">
+	<td th:text="${matiere.nom}"></td>
+		<td th:text="${matiere.dateDebut}"></td>
+		<td th:text="${matiere.heureDebut}"></td>
+		<td th:text="${matiere.heureFin}"></td>
+		<td>
+			<select name="idSurveillant" id="idSurveillant" onload="test()">
+				
+			</select>
+		</td>
+	</tr>
+</table>
+<input value="valider les surveillant" type="submit">
+<script th:inline="javascript">
+
+</script>

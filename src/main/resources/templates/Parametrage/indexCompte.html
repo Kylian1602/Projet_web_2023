@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+<h2>Ajouter un compte</h2>
+
+<form action="/Parametrage/addCompte" method="post" id="formCompte">
+	<input name="name" type="text"/ id="name">
+	<input name="surname" type="text" id="surname"/>
+	<input name="username" type="text" id="username"/>
+	<input name="password" type="password" id="password"/>
+	<select name="type" id="type">
+		<option value="0">Selectionner un type</option>
+		<option value="STU">Eleve</option>
+		<option value="SURV">Surveillant</option>
+		<option value="PROF">Professeur</option>
+		<option value="ADM">Admin</option>
+	</select>
+	
+	<select name="idMatiere" id="idMatiere">
+		<option value="0">Selectionner une matiere</option>
+		<option th:each="matiere : ${matieres}" th:value="${matiere.idMatiere}" th:text="${matiere.nom}">
+	</select>
+	
+	<select name="idSpecialite" id="idSpecialite">
+		<option value="0">Selectionner une spécialité</option>
+		<option th:each="specialite : ${specialites}" th:value="${specialite.idSpecialite}" th:text="${specialite.nom}">
+	</select>
+	<input value="Ajouter le compte" type="submit">
+</form>
+
+<h2>Modifier un compte</h2>
+
+<h3>Recherche du compte :</h3>
+<form action="/Parametrage/findCompte" method="post" id="formFindCompte">
+	<input name="name" type="text"/>
+	<input name="username" type="text"/>
+	<select name="typeFind" id="typeFind">
+		<option value="0">Selectionner un type</option>
+		<option value="STU">Eleve</option>
+		<option value="SUR">Surveillant</option>
+		<option value="PROF">Professeur</option>
+		<option value="ADM">Admin</option>
+	</select>
+	<input value="cherche le compte" type="submit">
+</form>
+
+<div id="tableauModifCompte">
+</div>
+
+<div id="modifForm">
+	<h3>Remplir modification</h3>
+	<form action="/Parametrage/modifierCompte" method="post" id="formModifierCompte">
+		<input name="id" id="id" type="hidden" value=""/>
+		<input name="name" type="text" id="nameModif"/>
+		<input name="surname" type="text" id="surnameModif"/>
+		<input name="username" type="text" id="usernameModif"/>
+		<input name="password" type="password" id="passwordModif"/>
+		<select name="typeModif" id="typeModif">
+			<option value="0">Selectionner un type</option>
+			<option value="STU">Eleve</option>
+			<option value="SUR">Surveillant</option>
+			<option value="PROF">Professeur</option>
+			<option value="ADM">Admin</option>
+		</select>
+	
+		<select name="idMatiereModif" id="idMatiereModif">
+			<option value="0">Selectionner une matiere</option>
+			<option th:each="matiere : ${matieres}" th:value="${matiere.idMatiere}" th:text="${matiere.nom}">
+		</select>
+		
+		<select name="idSpecialiteModif" id="idSpecialiteModif">
+			<option value="0">Selectionner une spécialité</option>
+			<option th:each="specialite : ${specialites}" th:value="${specialite.idSpecialite}" th:text="${specialite.nom}">
+		</select>
+		<input value="modifier le compte" type="submit">
+	</form>
+</div>
+</body>
+<script>
+$(document).ready(function(){
+	$("#idMatiere").hide();
+	$("#idSpecialite").hide();
+	$("#idMatiereModif").hide();
+	$("#idSpecialiteModif").hide();
+	$("#modifForm").hide();
+	
+	$("#type").on("change",function(){
+		if($("#type").val() == "STU"){
+			$("#idSpecialite").show();
+		}
+		else if($("#type").val() == "PROF"){
+			$("#idMatiere").show();
+		}
+		else{
+			$("#idMatiere").hide();
+			$("#idSpecialite").hide();
+		}
+	})
+	
+	$("#typeModif").on("change",function(){
+		if($("#typeModif").val() == "STU"){
+			$("#idSpecialiteModif").show();
+		}
+		else if($("#typeModif").val() == "PROF"){
+			$("#idMatiereModif").show();
+		}
+		else{
+			$("#idMatiereModif").hide();
+			$("#idSpecialiteModif").hide();
+		}
+	})
+})
+
+$("#formCompte").on('submit',function(e){
+	e.preventDefault();
+	if($("#name").val() == "" || $("#surname").val() == "" ||$("#username").val() == "" || $("#password").val() == "" || $("#type").val() == "0"){
+		alert("Il faut remplir tout les champs");
+	}
+	else if ($("#type").val() == "STU" && $("#idSpecialite").val() == 0){
+		alert("Il faut remplir tout les champs");
+	}
+	else if($("#type").val() == "PROF" && $("#idMatiere").val() == 0){
+		alert("Il faut remplir tout les champs");
+	}
+	else{
+		$.ajax({
+		    url: $(this).attr('action'),
+		    type: $(this).attr('method'),
+		    data: $(this).serialize(),
+		    success: function(reponse) { 
+	    		if(reponse == ""){
+	    			alert("le compte a été ajouter");
+	    			location.reload()
+	    		}
+	    		else{
+	    			alert(reponse);
+	    		}
+	    	}
+	   });
+	}
+})
+
+$("#formFindCompte").on('submit',function(e){
+	e.preventDefault();
+   	$.ajax({
+	    url: $(this).attr('action'),
+	    type: $(this).attr('method'),
+	    data: $(this).serialize(),
+	    success: function() { 
+	    	$("#tableauModifCompte").load("tableauCompte");
+    	}
+   });
+});
+
+$("#formModifierCompte").on('submit',function(e){
+	e.preventDefault();
+	if ($("#typeModif").val() == "STU" && $("#idSpecialiteModif").val() == 0){
+		alert("Il faut remplir la specialite");
+	}
+	else if($("#typeModif").val() == "PROF" && $("#idMatiereModif").val() == 0){
+		alert("Il faut remplir la matiere");
+	}
+	else{
+	   	$.ajax({
+		    url: $(this).attr('action'),
+		    type: $(this).attr('method'),
+		    data: $(this).serialize(),
+		    success: function(response) { 
+		    	if(response != ""){
+		    		alert(response);
+		    	}
+		    	else{
+		    		alert("Le compte a été modifier");
+		    			location.reload();
+		    	}
+	    	}
+	   });
+	}
+});
+
+
+function modifier(id){
+	$("#modifForm").show();
+	$.ajax({
+	    url: "getInformationCompte",
+	    type: "post",
+	    data: {
+	    	id : id
+	    },
+	    success: function(data) { 
+	    	var tab = data.split(";");
+	    	console.log(tab)
+	    	$("#id").val(tab[7]);
+	    	$("#name").val(tab[0]);
+	    	$("#surname").val(tab[1]);
+	    	$("#username").val(tab[2]);
+	    	$("#password").val(tab[3]);
+	    	$("#typeModif").val(tab[4]);
+	    	if(tab[6] != ""){
+	    		$("#idMatiereModif").val(tab[6]);
+	    	}
+	    	if(tab[5] != ""){
+	    		$("#idSpecialiteModif").val(tab[5]);
+	    	}
+	    	if($("#typeModif").val() == "STU"){
+				$("#idSpecialiteModif").show();
+			}
+			else if($("#typeModif").val() == "PROF"){
+				$("#idMatiereModif").show();
+			}
+			else{
+				$("#idMatiereModif").hide();
+				$("#idSpecialiteModif").hide();
+			}
+    	}
+   });
+}
+</script>
+</html>

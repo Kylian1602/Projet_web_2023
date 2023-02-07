@@ -1,0 +1,40 @@
+<input name="idMatiereBeforeChange" type="hidden" id="idMatiereBeforeChange" value=""/>
+<select name="idMatiere" id="idMatiere">
+	<option th:each="matiere : ${matieres}" th:value="${matiere.idMatiere}" th:text="|${matiere.nom} ${matiere.tempsExamen}|">
+</select>
+<script>
+$("#idMatiereBeforeChange").val($("#idMatiere").val());
+findCheckboxOfMatiere();
+$("#idMatiere").on("change",function(){
+	//if($("#listIdForOneMatiere").val() != "" && $("#listIdForOneMatiere").val() != $("#listIdRememberMatiere").val()){
+		$.ajax({
+		    url: "verifOnMatiere",
+		    type: "post",
+		    data: {
+		    	idSpecialite : $("#idSpecialiteBeforeChange").val(),
+		    	idMatiere : $("#idMatiereBeforeChange").val(),
+		    	listIdForOneMatiere : $("#listIdForOneMatiere").val(),
+		    	dateDebutSemaine : $("#dateDebutSemaine").val()
+		    },
+		    success: function(reponse) { 
+	    		if(reponse == ""){
+	    			console.log("changement accepter");
+	    			$("#idSpecialiteBeforeChange").val($("#idSpecialite").val());
+	    			$("#idMatiereBeforeChange").val($("#idMatiere").val());
+	    			$("#listIdForOneMatiere").val("");
+	    			findCheckboxOfMatiere();
+	    		}
+	    		else{
+	    			alert(reponse);
+	    			$("#idMatiere").val($("#idMatiereBeforeChange").val());
+	    			//$("#listIdForOneMatiere").val("");
+	    		}
+	    	}
+	   });
+	//}
+	/*else{
+		$("#idMatiereBeforeChange").val($("#idMatiere").val());
+		findCheckboxOfMatiere();
+	}*/
+})
+</script>

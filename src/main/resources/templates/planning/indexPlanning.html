@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+<title>Planning</title>
+<style type="text/css">
+        #headPlanning{
+        	display : flex;
+        }
+        p{
+        	margin-bottom: 0px;
+        }
+</style>
+</head>
+<body>
+<div id="choseSpecialite">
+	<select name="idSpecialiteSelect" id="idSpecialiteSelect">
+		<option th:each="specialite : ${specialites}" th:value="${specialite.idSpecialite}" th:text="${specialite.nom}">
+	</select>
+</div>
+
+<div id="choseExamen">
+	<select name="idExamenSelect" id="idExamenSelect">
+		<option th:each="examen : ${examens}" th:value="${examen.idExamen}" th:text="${examen.name}">
+	</select>
+</div>
+
+<div id="planning">
+
+	<div id="headPlanning">
+	<input name=dateDebutSemaine type="hidden" id="dateDebutSemaine" value=""/>
+	<input name="dateFinSemaine" type="hidden" id="dateFinSemaine" value=""/>
+	<input name="idExamen" type="hidden" id="idExamen" value=""/>
+	 	<button id="Down">&#8249;</button>
+		<h2>Semaine du<p id="dateDebutSemaineAffichage"></p> au <p id="dateFinSemaineAffichage"></p></h2>
+		<button id="Up">&#8250;</button>
+	</div>
+		
+	<div id="bodyPlanning">
+		<table id="table"></table>
+	</div>
+	
+</div>
+</body>
+<script th:inline="javascript">
+$(document).ready(function(){
+	$("#dateDebutSemaine").val([[${dateDebutSemaine}]]);
+	$("#dateFinSemaine").val([[${dateFinSemaine}]]);
+	$("#idExamen").val([[${idExamen}]]);
+	$("#idExamenSelect").val([[${idExamen}]]);
+	var typePersonne = [[${type}]];
+	if(typePersonne == "ADM"){
+		$("#choseSpecialite").show();
+	}
+	else{
+		$("#choseSpecialite").hide();
+	}
+	dateAffichage();
+	getPlanning("");
+	if($("#idExamenSelect").val() == undefined || $("#idExamenSelect").val() == ""){
+		$("#choseExamen").hide();
+	}
+})
+
+$("#idSpecialiteSelect").on("change",function(){
+	$.ajax({
+		url: "getMatiere",
+		type: "post",
+		data: {
+			idSpecialite : $("#idSpecialiteSelect").val()
+		},
+		success: function(reponse){
+			if(reponse != ""){
+				$("#idExamenSelect").html(reponse);
+				getPlanning("");
+				$.ajax({
+					url: "getHoraire",
+					type: "post",
+					data : {
+						dateDebutSemaine: $("#dateDebutSemaine").val(),
+						dateFinSemaine: $("#dateFinSemaine").val(),
+						buttonClick: "",
+						idExamen : $("#idExamenSelect").val(),
+					},
+					success : function(reponse){
+						var tabHoraire = reponse.split("¤");
+						$("#dateDebutSemaine").val(tabHoraire[0]);
+						$("#dateFinSemaine").val(tabHoraire[1]);
+						dateAffichage();
+					}
+				})
+			}
+		}
+	})
+})
+
+$("#idExamenSelect").on("change",function(){
+	//window.location = "/Planning/index?idExamen=" + $("#idExamenSelect").val()
+	getPlanning("");
+	$.ajax({
+		url: "getHoraire",
+		type: "post",
+		data : {
+			dateDebutSemaine: $("#dateDebutSemaine").val(),
+			dateFinSemaine: $("#dateFinSemaine").val(),
+			buttonClick: "",
+			idExamen : $("#idExamenSelect").val(),
+		},
+		success : function(reponse){
+			var tabHoraire = reponse.split("¤");
+			$("#dateDebutSemaine").val(tabHoraire[0]);
+			$("#dateFinSemaine").val(tabHoraire[1]);
+			dateAffichage();
+		}
+	})
+})
+
+$("#Up").on("click",function(){
+	getPlanning("Up");
+	$.ajax({
+		url: "getHoraire",
+		type: "post",
+		data : {
+			dateDebutSemaine: $("#dateDebutSemaine").val(),
+			dateFinSemaine: $("#dateFinSemaine").val(),
+			buttonClick: "Up",
+			idExamen : $("#idExamenSelect").val()
+		},
+		success : function(reponse){
+			var tabHoraire = reponse.split("¤");
+			$("#dateDebutSemaine").val(tabHoraire[0]);
+			$("#dateFinSemaine").val(tabHoraire[1]);
+			dateAffichage();
+		}
+	})
+	
+})
+
+$("#Down").on("click",function(){
+	getPlanning("Down");
+	$.ajax({
+		url: "getHoraire",
+		type: "post",
+		data : {
+			dateDebutSemaine: $("#dateDebutSemaine").val(),
+			dateFinSemaine: $("#dateFinSemaine").val(),
+			buttonClick: "Down",
+			idExamen : $("#idExamenSelect").val()
+		},
+		success : function(reponse){
+			var tabHoraire = reponse.split("¤");
+			$("#dateDebutSemaine").val(tabHoraire[0]);
+			$("#dateFinSemaine").val(tabHoraire[1]);
+			dateAffichage();
+		}
+	})
+})
+
+function dateAffichage(){
+	var tabDebut = $("#dateDebutSemaine").val().split("-");
+	var tabFin = $("#dateFinSemaine").val().split("-");
+	$("#dateDebutSemaineAffichage").text(tabDebut[2] + "/" + tabDebut[1]);
+	$("#dateFinSemaineAffichage").text(tabFin[2] + "/" + tabFin[1]);
+}
+
+function getPlanning(buttonClick){
+	$.ajax({
+		url : "getPlanning",
+		type : "post",
+		data : {
+			dateDebutSemaine: $("#dateDebutSemaine").val(),
+			dateFinSemaine: $("#dateFinSemaine").val(),
+			idExamen : $("#idExamenSelect").val(),
+			idSpecialite: $("#idSpecialiteSelect").val(),
+			buttonClick: buttonClick
+		},
+		success : function(reponse){
+			$("#table").html(reponse);
+		}
+	})
+}
+</script>
+</html>

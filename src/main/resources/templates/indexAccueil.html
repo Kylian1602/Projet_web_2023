@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <title>Planning</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://www.solodev.com/core/fileparse.php/131/urlt/action-grid-slider.css"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Mukta:700");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Mukta", sans-serif;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+        background: #f3f8fa;
+      }
+
+      button {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        outline: none;
+        border: 0;
+        vertical-align: middle;
+        text-decoration: none;
+        background: transparent;
+        padding: 0;
+        font-size: inherit;
+        font-family: inherit;
+      }
+
+      button.learn-more {
+        scale: 1.5;
+        width: 13rem;
+        height: auto;
+      }
+
+      button.learn-more .circle {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: relative;
+        display: block;
+        margin: 0;
+        width: 3rem;
+        height: 3rem;
+        background: #282936;
+        border-radius: 1.625rem;
+      }
+
+      button.learn-more .circle .icon {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        background: #fff;
+      }
+
+      button.learn-more .circle .icon.arrow {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        left: 0.625rem;
+        width: 1.125rem;
+        height: 0.125rem;
+        background: none;
+      }
+
+      button.learn-more .circle .icon.arrow::before {
+        position: absolute;
+        content: "";
+        top: -0.25rem;
+        right: 0.0625rem;
+        width: 0.625rem;
+        height: 0.625rem;
+        border-top: 0.125rem solid #fff;
+        border-right: 0.125rem solid #fff;
+        transform: rotate(45deg);
+      }
+
+      button.learn-more .button-text {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0.75rem 0;
+        margin: 0 0 0 1.85rem;
+        color: #282936;
+        font-weight: 700;
+        line-height: 1.6;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      button:hover .circle {
+        width: 100%;
+      }
+
+      button:hover .circle .icon.arrow {
+        background: #fff;
+        transform: translate(1rem, 0);
+      }
+
+      button:hover .button-text {
+        color: #fff;
+      }
+
+      body {
+        background-image: repeating-linear-gradient(
+            135deg,
+            rgba(240, 240, 240, 0.02) 0px,
+            rgba(240, 240, 240, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 21px,
+            rgba(224, 224, 224, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 42px,
+            rgba(208, 208, 208, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 63px,
+            rgba(192, 192, 192, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 84px,
+            rgba(175, 175, 175, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 105px,
+            rgba(159, 159, 159, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 126px,
+            rgba(143, 143, 143, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 147px,
+            rgba(127, 127, 127, 0.02) 168px
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(232, 232, 232, 0.02) 0px,
+            rgba(232, 232, 232, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 21px,
+            rgba(209, 209, 209, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 42px,
+            rgba(185, 185, 185, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 63px,
+            rgba(162, 162, 162, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 84px,
+            rgba(138, 138, 138, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 105px,
+            rgba(115, 115, 115, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 126px,
+            rgba(91, 91, 91, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 147px,
+            rgba(68, 68, 68, 0.02) 168px
+          ),
+          linear-gradient(90deg, #ffffff, #ffffff);
+      }
+
+      @supports (display: grid) {
+        /*body {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-gap: 0.625rem;
+          grid-template-areas: ". main main ." ". main main .";
+        }*/
+
+        #container {
+          grid-area: main;
+          align-self: center;
+          justify-self: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="connexion" class="learn-more">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Emploi du temps</span>
+    </button>
+    <!-- <button id="planning">planning</button>
+    <button id="parametrage">parametrage</button>
+    <button id="examen">gerer examen</button>
+    <button id="deconnexion">Deconnexion</button> -->
+    <div class="container-fluid" id="ctn">
+      <div id="information" style="font-size: 2rem;">
+        <p id="role"></p>
+        <p id="username"></p>
+      </div>
+      <div class="row justify-content-center" style="display: flex">
+        <div id="planning" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-calendar"></i><span>Planning</span>
+            </div>
+          </div>
+        </div>
+        <div id="parametrage" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-cog"></i><span>Paramétrages</span>
+            </div>
+          </div>
+        </div>
+        <div id="examen" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-pencil"></i><span>Gérer Examen</span>
+            </div>
+          </div>
+        </div>
+        <div id="deconnexion" class="col-xs-6 col-sm-4">
+          <div style="cursor: pointer" class="ct-box">
+            <div class="inner" role="presentation">
+              <i class="fa fa-plane"></i><span>Déconnexion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      $("#parametrage").hide();
+      $("#examen").hide();
+      $("#ctn").hide();
+      $("#role").html("ddd");
+      $.ajax({
+        url: "verifConnexion",
+        type: "post",
+        data: "",
+        success: function (reponse) {
+          if (reponse == "") {
+            $("#parametrage").hide();
+            $("#examen").hide();
+            $("#planning").hide();
+            $("#deconnexion").hide();
+            $("#ctn").hide();
+            $("#role").html("");
+            $("#username").html("");
+          } else {
+            var tabReponse = reponse.split(";");
+            $("#connexion").hide();
+            $("#role").html("Role: " + tabReponse[0]);
+            $("#username").html("Username: " + tabReponse[1]);
+            $("#deconnexion").show();
+            $("#planning").show();
+            $("#ctn").show();
+            if (tabReponse[0] == "ADM") {
+              $("#parametrage").show();
+              $("#examen").show();
+            } else {
+              //window.location = "";
+            }
+          }
+        },
+      });
+    });
+
+    $("#connexion").on("click", function () {
+      window.location = "/Login/connexion";
+    });
+    $("#deconnexion").on("click", function () {
+      window.location = "/Login/deconnexion";
+    });
+    $("#planning").on("click", function () {
+      window.location = "/Planning/indexPlanning";
+    });
+    /*$("#enregistrer").on('click',function(){
+	window.location = "/Login/enregistrer";
+})*/
+    $("#parametrage").on("click", function () {
+      window.location = "/Parametrage/index";
+    });
+    $("#examen").on("click", function () {
+      window.location = "/Examen/indexExamen";
+    });
+  </script>
+</html>
